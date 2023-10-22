@@ -9,6 +9,27 @@ class EmployeeInfoGenerator:
         self.num_records = num_records  # кількість записів для генерації
         self.fake_generator = Faker('uk_UA')  # ініціалізація генератора фейкових даних з українською локалізацією
 
+
+    MALE_PATRONYMICS = [
+        'Олександрович', 'Іванович', 'Миколайович', 'Петрович', 'Васильович',
+        'Андрійович', 'Сергійович', 'Дмитрович', 'Юрійович', 'Володимирович',
+        'Тарасович', 'Степанович', 'Євгенович', 'Романович', 'Богданович',
+        'Григорович', 'Русланович', 'Віталійович', 'Максимович', 'Левкович'
+    ]
+
+    FEMALE_PATRONYMICS = [
+        'Олександрівна', 'Іванівна', 'Миколаївна', 'Петрівна', 'Василівна',
+        'Андріївна', 'Сергіївна', 'Дмитрівна', 'Юріївна', 'Володимирівна',
+        'Тарасівна', 'Степанівна', 'Євгенівна', 'Романівна', 'Богданівна',
+        'Григорівна', 'Русланівна', 'Віталіївна', 'Максимівна', 'Левківна'
+    ]
+
+    def generate_middle_name(self, is_male):
+        if is_male:
+            return random.choice(self.MALE_PATRONYMICS)
+        else:
+            return random.choice(self.FEMALE_PATRONYMICS)
+
     # Метод для створення випадкової інформації про співробітника
     def create_employee_info(self):
         is_male = random.random() < 0.6  # випадковий вибір статі співробітника
@@ -18,7 +39,7 @@ class EmployeeInfoGenerator:
         gender = 'чоловік' if is_male else 'жінка'  # встановлення статі
 
         # Генерація іншої інформації
-        middle_name = self.fake_generator.first_name()
+        middle_name = self.generate_middle_name(is_male)
         dob = self.fake_generator.date_of_birth(tzinfo=None, minimum_age=15, maximum_age=85).strftime('%d-%m-%Y')
         position = self.fake_generator.job()
         city = self.fake_generator.city()
@@ -45,7 +66,10 @@ class EmployeeInfoGenerator:
         self.write_to_csv()  # виклик методу для запису даних у файл
         print(f"Generated {self.num_records} records in {self.output_path}")  # вивід повідомлення про успішне виконання
 
-
 # Створення екземпляру класу та виконання основного методу
 employee_info_generator = EmployeeInfoGenerator("employees.csv")
 employee_info_generator.execute()
+
+
+
+
